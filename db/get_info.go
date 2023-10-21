@@ -1,13 +1,8 @@
 package db
 
 import (
-	"fmt"
 	"log"
-	"net/http"
 	"strconv"
-	"strings"
-
-	"github.com/gin-gonic/gin"
 )
 
 type PokemonInfo struct {
@@ -58,7 +53,7 @@ func GetInfo(id int) (*PokemonInfo, error) {
 
 	data_err := db.Get(&pokemon_info, "SELECT * FROM pokemons WHERE national_id = ?", id)
 	if data_err != nil {
-		log.Fatalf("Failed to get %s DB info: %s", id, data_err)
+		log.Fatalf("Failed to get %d DB info: %s", id, data_err)
 	}
 	return &pokemon_info, nil
 }
@@ -69,7 +64,7 @@ func GetEvolutions(id int) ([]PokemonSmallInfo, error) {
 	rows, evo_err := db.Query("SELECT evolution_id FROM pokemon_evolutions WHERE pokemon_id = ?", strconv.Itoa(id))
 
 	if evo_err != nil {
-		log.Fatalf("Failed to get %s evolutions: %s", id, evo_err)
+		log.Fatalf("Failed to get %d evolutions: %s", id, evo_err)
 	}
 
 	for rows.Next() {
