@@ -1,14 +1,14 @@
 package main
 
 import (
-	"github.com/Enriquefft/PokeApi/handlers"
+	handlers "github.com/Enriquefft/PokeApi/handlers"
 	"github.com/gin-gonic/gin"
 )
 
 func setupRouter() *gin.Engine {
 	router := gin.Default()
-
-	router.GET("/image", GetImage)
+	handlers.InitDB()
+	router.GET("/info/id", handlers.GetAllPokemonInfoById)
 
 	return router
 }
@@ -75,8 +75,15 @@ func setupRouter() *gin.Engine {
 // }
 
 func main() {
+	db_err := db.InitDB()
+
+	if db_err != nil {
+		panic(db_err)
+	}
+
 	r := setupRouter()
 
 	// Listen and Server in Utec network port 3001
-	r.Run("10.100.226.35:3001")
+	// r.Run("10.100.226.35:3001")
+	r.Run(":3001")
 }

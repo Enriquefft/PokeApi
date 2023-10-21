@@ -1,0 +1,14 @@
+{
+  "name": "mockup",
+  "module": "app.js",
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5"
+  }
+}
