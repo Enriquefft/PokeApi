@@ -44,11 +44,8 @@ let pokemon = {
 };
 
 app.get("/pokemon/:name", (req, res) => {
-  if (req.params.name.toLowerCase() === "kirlia") {
-    res.json(pokemon);
-  } else {
-    res.status(404).send("Pokemon not found");
-  }
+  pokemon.name = req.params.name;
+  res.json(pokemon);
 });
 
 app.listen(port, "10.100.232.143", () => {
