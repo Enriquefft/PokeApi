@@ -41,6 +41,74 @@ let pokemon = {
   ],
   img_url: "https://play.pokemonshowdown.com/sprites/dex/kirlia.png",
   sound_url: "https://play.pokemonshowdown.com/audio/cries/kirlia.mp3",
+
+  matchups: {
+    defensive: {
+      x4: [
+      ],
+      x2: [
+        "Poison",
+        "Ghost",
+        "Steel"
+      ],
+      x0_5: [
+        "Psychic",
+      ],
+      x0_25: [
+        "Fighting",
+      ],
+      x0: [
+        "Dragon",
+      ],
+    },
+
+    offensive: {
+      "Psychic": {
+        x4: [
+        ],
+        x2: [
+          "Fighting",
+          "Poison"
+        ],
+        x0_5: [ 
+          "Steel",
+          "Psychic",
+        ],
+
+        x0: [
+          "Dark"
+        ],
+
+        x0_25: [
+        ],
+
+      },
+      "Fairy": {
+        x4: [
+        ],
+        x2: [
+          "Fighting",
+          "Poison",
+          "Dragon",
+          "Dark",
+        ],
+        x0_5: [ 
+          "Steel",
+        ],
+
+        x0: [
+        ],
+
+        x0_25: [
+        ],
+
+      }
+
+    }
+
+
+  }
+
 };
 
 app.get("/pokemon/:name", (req, res) => {

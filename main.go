@@ -10,7 +10,8 @@ func setupRouter() *gin.Engine {
 		panic(db_err)
 	}
 	router := gin.Default()
-	router.GET("/info/id", GetAllPokemonInfoById)
+	router.GET("/pokemon/id/:id", GetAllPokemonInfoById)
+	router.GET("/pokemon/name/:name", GetAllPokemonInfoByName)
 
 	return router
 }
@@ -19,6 +20,5 @@ func main() {
 	r := setupRouter()
 
 	// Listen and Server in Utec network port 3001
-	// r.Run("10.100.226.35:3001")
-	r.Run(":3001")
+	r.Run("10.100.232.143:3002")
 }

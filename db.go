@@ -2,8 +2,25 @@ package main
 
 import (
 	"log"
-	"strconv"
+
+	"github.com/jmoiron/sqlx"
+	_ "github.com/mattn/go-sqlite3" // Driver for sqlite3
 )
+
+var db *sqlx.DB
+
+func InitDB() error {
+	DB_PATH := "DB/Test.db"
+
+	var err error
+	db, err = sqlx.Open("sqlite3", DB_PATH)
+	if err != nil {
+		log.Fatal("Couldn't connect to database", err)
+		return err
+	}
+	log.Println("Connected to database")
+	return nil
+}
 
 type PokemonInfo struct {
 	NationalID       int     `db:"national_id" json:"national_id"`
@@ -48,23 +65,33 @@ func GetSmallInfo(id int) (*PokemonSmallInfo, error) {
 	return &pokemon_info, nil
 }
 
-func GetInfo(id int) (*PokemonInfo, error) {
+func getInfoById(id string) (*PokemonInfo, error) {
 	var pokemon_info PokemonInfo
 
 	data_err := db.Get(&pokemon_info, "SELECT * FROM pokemons WHERE national_id = ?", id)
 	if data_err != nil {
-		log.Fatalf("Failed to get %d DB info: %s", id, data_err)
+		log.Fatalf("Failed to get %s DB info: %s", id, data_err)
 	}
 	return &pokemon_info, nil
 }
 
-func GetEvolutions(id int) ([]PokemonSmallInfo, error) {
+func getInfoByName(name string) (*PokemonInfo, error) {
+	var pokemon_info PokemonInfo
+
+	data_err := db.Get(&pokemon_info, "SELECT * FROM pokemons WHERE name = ?", name)
+	if data_err != nil {
+		log.Fatalf("Failed to get %s DB info: %s", name, data_err)
+	}
+	return &pokemon_info, nil
+}
+
+func GetEvolutions(id string) ([]PokemonSmallInfo, error) {
 	var evolutions []PokemonSmallInfo
 
-	rows, evo_err := db.Query("SELECT evolution_id FROM pokemon_evolutions WHERE pokemon_id = ?", strconv.Itoa(id))
+	rows, evo_err := db.Query("SELECT evolution_id FROM pokemon_evolutions WHERE pokemon_id = ?", id)
 
 	if evo_err != nil {
-		log.Fatalf("Failed to get %d evolutions: %s", id, evo_err)
+		log.Fatalf("Failed to get %s evolutions: %s", id, evo_err)
 	}
 
 	for rows.Next() {
@@ -76,6 +103,12 @@ func GetEvolutions(id int) ([]PokemonSmallInfo, error) {
 		small_info, err := GetSmallInfo(evolutionID)
 		if err != nil {
 			log.Fatalf("Failed to get small info for evolution id: %s", err)
+		}
+
+		var name_err error
+		small_info.ImgUrl, name_err = buildImgUrl(small_info.Name)
+
+		if name_err != nil {
 		}
 
 		evolutions = append(evolutions, *small_info)
